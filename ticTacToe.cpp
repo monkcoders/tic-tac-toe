@@ -18,7 +18,7 @@ void clearBoard(vector<vector<char>> &board){
     }
 }
 
-//takes user input 
+//fills the user board at the players move with their specific symbols 
 bool userInput(int player, int playerMove,vector<vector<char>> &board){
     if(playerMove>9){
         return false;
@@ -26,7 +26,7 @@ bool userInput(int player, int playerMove,vector<vector<char>> &board){
     char inputSymbol;
     player==1? inputSymbol='X': inputSymbol='O';
     char boardVal = board[(playerMove-1)/3][(playerMove-1)%3];
-    if( boardVal == ' '){
+    if( boardVal == ' '){//if player move is 7 then row = (7-1)/3=2 and col= (7-1)%3=1 as board is based on row major axis and 0 based indexing
         board[(playerMove-1)/3][(playerMove-1)%3]=inputSymbol;
         return true;
     } 
@@ -35,28 +35,26 @@ bool userInput(int player, int playerMove,vector<vector<char>> &board){
     }
 }
 
+//check and returns player no who wins and if no one wins then returns -1
 int checkWin(vector<vector<char>> board){
     int winner=-1;
-
+    //checks diagonals
     if((board[1][1]=='X' || board[1][1]=='O') && ((board[1][1]==board[0][0] && board[1][1]==board[2][2])||(board[0][2]==board[1][1] && board[1][1]==board[2][0]))){
         if(board[1][1]=='X'){
             winner=1;}
-        else{winner=2;}
-        cout<<winner;
+        else{
+            winner=2;}
         return winner;
     }
+    //checking all the horizontal axis 
     for(int i=0; i<3; i++){
-        
-       
             if(board[i][0]==board[i][1] && board[i][0]==board[i][2] && board[i][0]!=' ' ){
                 board[i][0]=='X'?winner=1:winner=2;
                 return winner;
             }    
         }
-    
+    //checking all the vertical axis 
     for(int i=0; i<3; i++){
-       
-        
            if(board[0][i]==board[1][i] && board[0][i]==board[2][i] && board[0][i]!=' ' ){
                 board[0][i]=='X'?winner=1:winner=2;
                 return winner;
@@ -65,14 +63,17 @@ int checkWin(vector<vector<char>> board){
     return -1;
 
 }
-
+// returns true if the game is over 
 bool gameOver(int turn, vector<vector<char>> board){
-    if(checkWin(board)==1 || checkWin(board)==2 || turn>9){
+    int winner=checkWin(board);
+    if(winner==1 || winner==2 || turn>9){
         return true;
     }
     return false;
 }
 
+
+//prints the scoreboard containing total scores of both the players 
 void printScoreBoard(vector<pair<string,int>> scoreBoard){
     cout<<"\t\t\t Score Board\n"<<endl;
     cout<<"\t |-----------------------|-----------------------|"<<endl;
@@ -95,16 +96,17 @@ int main(){
     
     cout<<"Enter name of player 2 : "<<endl;
     cin>>player2;
-
+    //score board of the game
     vector<pair<string,int>> scoreboard={{player1,0},{player2,0}};
-    scoreboard[0].first.resize(15,' ');
+    scoreboard[0].first.resize(15,' ');//fixing size of thier name to fix scoreboard format
     scoreboard[1].first.resize(15,' ');
     
-
+    //creating gameboard
     vector<vector<char>> board(3, vector<char>(3,' '));
     printBoard(board);
     int playerMove;
-    int i=1;
+    //provides the current turn such that i%2==1 implies player1 else player2
+    int i=1;  
     while(!gameOver(i,board)){
         if(i%2==1){
             cout<<player1 <<" please enter your move "<<endl;
@@ -128,7 +130,6 @@ int main(){
             }
             else if(win==-1 && i==9){
                 cout<<"Its a draw "<<endl;
-                
                 i++;
                 
             }
@@ -142,6 +143,10 @@ int main(){
                     clearBoard(board);
                     i=0;
                 } 
+                else{
+                    
+                    break;
+                }
             }
             i++;
         }
@@ -151,6 +156,7 @@ int main(){
         printBoard(board);
     }
 
-
+    cout<<"Thanks for giving your precious time please star this repository and follow me"<<endl;
+    cout<<"Developed with love in india by Abhishek Sharma"<<endl;
     return 0;
 }
